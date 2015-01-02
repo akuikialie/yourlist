@@ -71,7 +71,7 @@ Register your Account
 ##### <a name="register-user-url"></a> Resource URL
 /api/auth/register
 
-##### <a name="login-user-param"></a> Parameters
+##### <a name="register-user-param"></a> Parameters
 + `username` _`required`_ Username.
 + `password` _`required`_ Password.
 + `confirm_password` _`required`_ Confirm Password 
