@@ -45,8 +45,11 @@ class project extends REST_Controller {
         /** Check Input User Key **/
         $userKey = $this->_checkInputKey();
         
-        $project_name  = $this->post('project_name');
-        
+        $projectName         = $this->post('project_name');
+        $projectOwner        = $this->post('client_name');
+        $projectPlatform     = $this->post('platform');
+        $projectWorkingTime  = $this->post('working_time');
+        echo $project_name;        
     }
 
     public function login_post()
