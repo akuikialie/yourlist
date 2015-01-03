@@ -123,7 +123,25 @@ class project extends REST_Controller {
 
     public function get_single_project_get()
     {
-    	echo "get single";
+        /** Check Input User Key **/
+        $userKey = $this->_checkInputGetKey();
+
+        $user = $this->user_m->getUserByKey($userKey);
+		
+        $projectCode         = $this->get('kode_project');
+
+	if (!isset($projectCode) || empty($projectCode)) {
+	    $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter'));
+	}
+	
+	$checkProjectCode = $this->project_m->checkProjectCode($projectCode);
+    	if (!$checkProjectCode) {
+                $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter Correctly'));
+    	}
+	$dataProjectSingle = $this->project_m->getProjectSingle($projectCode);
+
+        $this->response(array('status' => 1, 'data' => $dataProjectSingle));
+ 
     }
 
     public function get_projects_get()

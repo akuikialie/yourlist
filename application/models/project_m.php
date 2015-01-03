@@ -29,7 +29,16 @@ class Project_m extends MY_Model {
         $data = $q->result_object();
         return $data;
     }
-    
+
+    function getProjectSingle($projectCode)
+    {
+    	$sql="select * from " . $this->tableName . " where kode_project = '" . $this->db->escape_str($projectCode) . "'";
+        $q = $this->db->query($sql);
+        $data = $q->row();
+        return $data;
+    }
+ 
+
     function checkKey($key)
     {
         return $this->db->where(config_item('rest_key_column'), $key)->count_all_results(config_item('rest_keys_table')) > 0;
