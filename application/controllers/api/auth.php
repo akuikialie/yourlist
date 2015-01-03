@@ -14,6 +14,37 @@ class auth extends REST_Controller {
         $this->load->model('user_m');
     }
 
+    public function login_get()
+    {
+        $username = $this->get('username');
+        $password = $this->get('password');
+    
+        if (empty($username) || !isset($username) || $username == " ") {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter'));
+        }
+
+        if (empty($password) || !isset($password) || $password == " ") {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter'));
+        }
+ 
+        /** Check Username is in already in Database **/
+        if ($this->_checkUsername($username)) {
+            /** Check Username & Password in Database **/
+            $checkLogin = $this->auth_m->login($username, $password);
+            if ($checkLogin) {
+                /** Get User Data **/
+                $dataUser = $this->user_m->getUser($username);
+
+                $this->response(array('status' => 1, 'data' => $dataUser));
+            } else {
+                $this->response(array('status' => 0, 'error' => 'Your Account is not Valid'));
+            }
+        } else {
+            $this->response(array('status' => 0, 'error' => 'Your Account is not Valid'));
+        }
+    }
+ 
+
     public function login_post()
     {
         $username = $this->post('username');
