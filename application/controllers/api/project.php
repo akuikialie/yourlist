@@ -40,6 +40,33 @@ class project extends REST_Controller {
         return $this->input->server('HTTP_X_API_KEY');*/
     }
     
+    /**
+     * Check Input User Key GET
+     * 
+     * @return key string
+     */
+    private function _checkInputGetKey()
+    {
+        $key = $this->get('key');
+        
+        if (empty($key) || !isset($key)) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Key'));
+        }
+        
+        $checkKeyValid = $this->user_m->checkKey($key); 
+        
+        if (!$checkKeyValid) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Key'));
+        }
+        return $key;
+        /*if (!$this->input->server('HTTP_X_API_KEY')) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Key'));
+            return;
+        }
+        return $this->input->server('HTTP_X_API_KEY');*/
+    }
+ 
+    
     public function create_project_post()
     {
         /** Check Input User Key **/
@@ -81,6 +108,48 @@ class project extends REST_Controller {
     	} else {
                 $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter Correctly'));
     	}
+    }
+
+    public function delete_project_get()
+    {
+    	echo "delete";
+    }
+
+
+    public function update_project_get()
+    {
+    	echo "update";
+    }
+
+    public function get_single_project_get()
+    {
+    	echo "get single";
+    }
+
+    public function get_projects_get()
+    {
+        /** Check Input User Key **/
+        $userKey = $this->_checkInputGetKey();
+
+        $user = $this->user_m->getUserByKey($userKey);
+		
+        $getLimit         = $this->get('limit');
+        $getOffset        = $this->get('offset');
+
+	if (!isset($getLimit) || empty($getLimit)) {
+	    $limit = 5;
+	} else {
+	    $limit = $getLimit;
+	}
+
+	if (!isset($getOffset) || empty($getOffset)) {
+	    $offset = 0;
+	} else {
+	    $offset = $getOffset;
+	}
+
+	$dataProject = $this->project_m->getProjects($user->id_user, $limit, $offset);
+        $this->response(array('status' => 1, 'data' => $dataProject));
     }
 
 }
