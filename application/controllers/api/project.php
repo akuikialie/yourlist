@@ -170,4 +170,97 @@ class project extends REST_Controller {
         $this->response(array('status' => 1, 'data' => $dataProject));
     }
 
+    public function add_tugas_project_doing_post() {
+        /** Check Input User Key **/
+        $userKey = $this->_checkInputKey();
+
+        $user = $this->user_m->getUserByKey($userKey);
+
+        $projectCode         = $this->post('kode_project');
+        $module         = $this->post('module');
+        $timeDoing         = $this->post('time');
+        $description         = $this->post('description');
+        $workingTimeStart         = $this->post('working_time_start');
+        $workingTimeEnd         = $this->post('working_time_end');
+
+        if (!isset($projectCode) || empty($projectCode)) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter'));
+        }
+
+        if (!isset($module) || empty($module)) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter'));
+        }
+
+        if (!isset($timeDoing) || empty($timeDoing)) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter'));
+        }
+
+        if (!isset($description) || empty($description)) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter'));
+        }
+
+
+        $checkProjectCode = $this->project_m->checkProjectCode($projectCode);
+        if (!$checkProjectCode) {
+                $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter Correctly'));
+        }
+
+        $dataTugas = array(
+            'kode_project'       => $projectCode,
+            'module'             => $module,
+            'time_do'            => $projectCode,
+            'description'        => $projectCode,
+            'working_date_start' => $projectCode,
+            'working_date_end'   => $projectCode,
+            'creator'            => (int) $user->id_user,
+            'created'            => date('Y-m-d H:i:s'),
+        );
+
+        /** Insert Data Project into Database **/
+        $projectData = $this->project_m->insert('tbl_tugas', $dataTugas); 
+    
+        if ($projectData) {
+                $this->response(array('status' => 1, 'message' => 'New Jobs has been Add'));
+        } else {
+                $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter Correctly'));
+        }
+    }
+
+    public function set_project_pic_get() {
+        /** Check Input User Key **/
+        $userKey = $this->_checkInputGetKey();
+
+        $user = $this->user_m->getUserByKey($userKey);
+
+        $projectCode         = $this->get('kode_project');
+        $idUser         = $this->get('id_user');
+
+        if (!isset($projectCode) || empty($projectCode)) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter'));
+        }
+
+        if (!isset($idUser) || empty($idUser)) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter'));
+        }
+
+
+        $checkProjectCode = $this->project_m->checkProjectCode($projectCode);
+        if (!$checkProjectCode) {
+                $this->response(array('status' => 0, 'error' => 'Please Fill Your Parameter Correctly'));
+        }
+
+        $checkUser = $this->user_m->get_single('tbl_user', 'id_user', $idUser);
+        if ($checkUser->id_level != 2) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your ID User Correctly'));       
+        }
+
+        /** Update Data Project into Database **/
+        $projectSet = $this->project_m->update('tbl_project', 'kode_project', $projectCode, array('pic' => $idUser)); 
+    
+        if ($projectSet) {
+                $this->response(array('status' => 1));
+        } else {
+                $this->response(array('status' => 0));
+        }
+    }
 }
