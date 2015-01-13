@@ -30,6 +30,14 @@ class Project_m extends MY_Model {
         return $data;
     }
 
+    function getProjectsByPic($idUser, $limit, $offset)
+    {
+        $sql="select * from " . $this->tableName . " where pic = " . $idUser. " limit " . (int) $offset . " , " . (int) $limit;
+        $q = $this->db->query($sql);
+        $data = $q->result_object();
+        return $data;
+    }
+
     function getProjectSingle($projectCode)
     {
     	$sql="select * from " . $this->tableName . " where kode_project = '" . $this->db->escape_str($projectCode) . "'";

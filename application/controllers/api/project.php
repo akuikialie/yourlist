@@ -263,4 +263,31 @@ class project extends REST_Controller {
                 $this->response(array('status' => 0));
         }
     }
+
+    public function get_project_by_pic_get()
+    {
+        /** Check Input User Key **/
+        $userKey = $this->_checkInputGetKey();
+
+        $user = $this->user_m->getUserByKey($userKey);
+        
+        $getLimit         = $this->get('limit');
+        $getOffset        = $this->get('offset');
+
+        if (!isset($getLimit) || empty($getLimit)) {
+            $limit = 5;
+        } else {
+            $limit = $getLimit;
+        }
+
+        if (!isset($getOffset) || empty($getOffset)) {
+            $offset = 0;
+        } else {
+            $offset = $getOffset;
+        }
+
+        $dataProject = $this->project_m->getProjectsByPic($user->id_user, $limit, $offset);
+
+        $this->response(array('status' => 1, 'data' => $dataProject));
+    }
 }
