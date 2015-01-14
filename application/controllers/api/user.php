@@ -14,6 +14,32 @@ class user extends REST_Controller {
         $this->load->model('user_m');
     }
 
+    /**
+     * Check Input User Key GET
+     * 
+     * @return key string
+     */
+    private function _checkInputGetKey()
+    {
+        $key = $this->get('key');
+        
+        if (empty($key) || !isset($key)) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Key'));
+        }
+        
+        $checkKeyValid = $this->user_m->checkKey($key); 
+        
+        if (!$checkKeyValid) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Key'));
+        }
+        return $key;
+        /*if (!$this->input->server('HTTP_X_API_KEY')) {
+            $this->response(array('status' => 0, 'error' => 'Please Fill Your Key'));
+            return;
+        }
+        return $this->input->server('HTTP_X_API_KEY');*/
+    }
+
     public function user_profile_get()
     {
         $username = $this->get('username');
@@ -43,6 +69,25 @@ class user extends REST_Controller {
             }
         } else {
             $this->response(array('status' => 0, 'error' => "Your Key isn't Valid!"));
+        }
+    }
+
+
+    public function get_all_manager_get()
+    {
+        /** Check Input User Key **/
+        $userKey = $this->_checkInputGetKey();
+
+        $user = $this->user_m->getUserByKey($userKey);
+
+        $getUser = $this->user_m->get_datas('tbl_user', 2, 'id_level');
+
+        if ($getUser) {
+            unset($getUser->password);
+
+            $this->response(array('status' => 1, 'user' => $getUser));
+        } else {
+            $this->response(array('status' => 0, 'error' => "Unsuccessfull Get Data!!"));
         }
     }
 
