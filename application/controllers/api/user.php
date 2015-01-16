@@ -91,4 +91,22 @@ class user extends REST_Controller {
         }
     }
 
+    public function get_all_team_get()
+    {
+        /** Check Input User Key **/
+        $userKey = $this->_checkInputGetKey();
+
+        $user = $this->user_m->getUserByKey($userKey);
+
+        $getUser = $this->user_m->get_datas('tbl_user', 3, 'id_level');
+
+        if ($getUser) {
+            unset($getUser->password);
+
+            $this->response(array('status' => 1, 'user' => $getUser));
+        } else {
+            $this->response(array('status' => 0, 'error' => "Unsuccessfull Get Data!!"));
+        }
+    }
+
 }
