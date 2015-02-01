@@ -290,4 +290,16 @@ class project extends REST_Controller {
 
         $this->response(array('status' => 1, 'data' => $dataProject));
     }
+
+    public function get_project_by_user_get()
+    {
+        /** Check Input User Key **/
+        $userKey = $this->_checkInputGetKey();
+
+        $user = $this->user_m->getUserByKey($userKey);
+        
+        $dataProject = $this->project_m->getProjectsByuser($user->id_user);
+
+        $this->response(array('status' => 1, 'data' => $dataProject));
+    }
 }

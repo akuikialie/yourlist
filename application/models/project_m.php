@@ -73,6 +73,15 @@ class Project_m extends MY_Model {
         return $data;
     }
 
+    function getProjectsByuser($id_user)
+    {
+        $sql = "select t.kode_project, p.project_name from tbl_tugas_karyawan tk, tbl_tugas t, tbl_project p where tk.id_user =" . (int) $id_user . " and tk.id_tugas=t.id_tugas and t.kode_project = p.kode_project group by t.kode_project;";
+
+        $q = $this->db->query($sql);
+        $data = $q->result_object();
+        return $data;
+    }
+
 }
 
 /* End of file  */
